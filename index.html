@@ -132,16 +132,44 @@
 <script src="axios.js"></script>
 <script src="api.js"></script>
 <script>
-    let msPromise = api.getVacanciesCountFromMicrosoft();
-    let gPromise = api.getVacanciesCountFromGoogle();
-    let aggregatedPromise = Promise.all([msPromise, gPromise]);
-    aggregatedPromise.then(res => {
-        let resFromMS = res[0].data.vacancies
-        let resFromG = res[1].data.vacancies
-        api.sendStudentsCountToItKamasutra(resFromMS + resFromG)
+    /*let msVacancies;
+    api.getVacanciesCountFromMicrosoft()
+        .then(msCount => {
+            msVacancies = msCount
+            return api.getVacanciesCountFromGoogle();
+        })
+        .then(gCount => {
+            return api.sendStudentsCountToItKamasutra(gCount + msVacancies);
+        })
+        .then(res => {
+            console.log(res.data);
+        });*/
+
+    function loadVacanciesPromiseV() {
+        let msVacancies;
+        api.getVacanciesCountFromMicrosoft()
+            .then(msCount => {
+                msVacancies = msCount
+                return api.getVacanciesCountFromGoogle();
+            })
+            .then(gCount => {
+                return api.sendStudentsCountToItKamasutra(gCount + msVacancies);
+            })
             .then(res => {
-                console.log('from it-kamasutra: ' + res.data);
+                console.log(res.data);
             });
-    });
+    }
+
+    async function loadVacanciesAsyncAwaitV() {
+        let msCount = await api.getVacanciesCountFromMicrosoft()
+        console.log(msCount)
+        let gCount = await api.getVacanciesCountFromGoogle()
+        console.log(gCount)
+        let res = await api.sendStudentsCountToItKamasutra(msCount + gCount)
+        console.log(res.data)
+    }
+
+    loadVacanciesPromiseV();
+    loadVacanciesAsyncAwaitV();
 </script>
 
