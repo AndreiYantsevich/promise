@@ -110,7 +110,7 @@
         });
 </script>-->
 
-<script>
+<!--<script>
     let getRandomAfter = (num) => {
         let promise = new Promise((resolve) => {
             setTimeout(() => {
@@ -128,4 +128,20 @@
         console.log(`i give ${number[1]} after 2 sec`)
         console.log(`i give ${number[2]} after 3 sec`)
     } );
+</script>-->
+<script src="axios.js"></script>
+<script src="api.js"></script>
+<script>
+    let msPromise = api.getVacanciesCountFromMicrosoft();
+    let gPromise = api.getVacanciesCountFromGoogle();
+    let aggregatedPromise = Promise.all([msPromise, gPromise]);
+    aggregatedPromise.then(res => {
+        let resFromMS = res[0].data.vacancies
+        let resFromG = res[1].data.vacancies
+        api.sendStudentsCountToItKamasutra(resFromMS + resFromG)
+            .then(res => {
+                console.log('from it-kamasutra: ' + res.data);
+            });
+    });
 </script>
+
